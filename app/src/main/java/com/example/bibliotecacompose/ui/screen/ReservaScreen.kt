@@ -1,20 +1,9 @@
 package com.example.bibliotecacompose.ui.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.bibliotecacompose.ui.model.Libro
+import com.example.bibliotecacompose.ui.model.Reserva
+import com.example.bibliotecacompose.ui.model.reservasMock
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,11 +22,19 @@ fun ReservaScreen(
     libro: Libro,
     navController: NavHostController
 ) {
+    val fechaActual = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
 
-    val fechaActual = SimpleDateFormat(
-        "dd/MM/yyyy",
-        Locale.getDefault()
-    ).format(Date())
+    LaunchedEffect(Unit) {
+        val codigoAleatorio = "RES-${(1000..9999).random()}"
+        val nuevaReserva = Reserva(
+            codigo = codigoAleatorio,
+            libro = libro,
+            fechaReserva = fechaActual
+        )
+        if (reservasMock.none { it.libro.id == libro.id }) {
+            reservasMock.add(nuevaReserva)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -52,9 +51,7 @@ fun ReservaScreen(
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(
-            modifier = Modifier.height(8.dp)
-        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = "Reserva Exitosa",
@@ -63,83 +60,39 @@ fun ReservaScreen(
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
+        Spacer(modifier = Modifier.height(30.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            Column(
-                modifier = Modifier.padding(20.dp)
-            ) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-
-                    Text(
-                        text = "Libro:",
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(
-                        modifier = Modifier.width(8.dp)
-                    )
-
-                    Text(
-                        text = libro.titulo,
-                        fontWeight = FontWeight.Bold
-                    )
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Libro:", fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = libro.titulo, fontWeight = FontWeight.Bold)
                 }
 
-                Spacer(
-                    modifier = Modifier.height(20.dp)
-                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-
-                    Text(
-                        text = "Fecha:",
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(
-                        modifier = Modifier.width(8.dp)
-                    )
-
-                    Text(
-                        text = fechaActual,
-                        fontWeight = FontWeight.Bold
-                    )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Fecha:", fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = fechaActual.replace('-', '/'), fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
+        Spacer(modifier = Modifier.height(30.dp))
 
         Button(
             onClick = {
-                navController.navigate("inicio")
+                navController.popBackStack("inicio", inclusive = false)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF20A94B),
                 contentColor = Color.White
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp)
+            modifier = Modifier.fillMaxWidth().height(52.dp)
         ) {
-
-            Text(
-                text = "Volver al Inicio",
-                fontWeight = FontWeight.Bold
-            )
+            Text(text = "Volver al Inicio", fontWeight = FontWeight.Bold)
         }
     }
 }

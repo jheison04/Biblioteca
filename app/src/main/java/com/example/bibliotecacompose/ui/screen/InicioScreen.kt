@@ -23,14 +23,13 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 
 val moradoAzulado = Color(0xFF6257C7)
+
 @Composable
 fun InicioScreen(
     navController: NavController
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,6 +83,29 @@ fun InicioScreen(
         ) {
             Text(
                 text = "Ver libros"
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        // --- NUEVO BOTÓN PARA IR A MIS RESERVAS ---
+        Button(
+            onClick = {
+                navController.navigate("reservas")
+            },
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF20A94B),
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth(0.65f)
+                .height(50.dp)
+        ) {
+            Text(
+                text = "Mis reservas"
             )
         }
     }
